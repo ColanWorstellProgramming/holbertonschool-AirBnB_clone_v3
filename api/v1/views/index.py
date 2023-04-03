@@ -1,25 +1,27 @@
 #!/usr/bin/python3
-"""Route to index page"""
+""" creates a JSON response """
 from json import dumps
-from flask import Response
+from flask import jsonify, Response
 from api.v1.views import app_views
-from models import storage, class_richard
-
-
-classConversion = {"Amenity": "amenities", "City": "cities", "Place": "places",
-                   "Review": "reviews", "State": "states", "User": "users"}
+from models import storage
 
 
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status():
-    """Return status of API"""
+    """creates a JSON response for status message"""
     return Response(dumps({"status": "OK"}), content_type='application/json')
 
 
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
-def stats():
-    """Return number of objects by type"""
-    data = {}
-    for cls in class_richard.keys():
-        data[classConversion[cls]] = storage.count(cls)
-    return Response(dumps(data), content_type='application/json')
+def get_stats():
+    """Retrieves the number of each object by type"""
+    stats = {
+        "amenities": storage.count("Amenity"),
+        "cities": storage.count("City"),
+        "places": storage.count("Place"),
+        "reviews": storage.count("Review"),
+        "states": storage.count("State"),
+        "users": storage.count("User")
+    }
+
+    return jsonify(stats)
