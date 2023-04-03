@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-'''states restful new view'''
-
+"""states restful new view"""
 from api.v1.views import app_views
 from flask import jsonify, request, abort
 from models import storage, State
