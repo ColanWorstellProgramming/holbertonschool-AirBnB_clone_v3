@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ creates a JSON response """
-from flask import jsonify
+from json import dumps
+from flask import jsonify, Response
 from api.v1.views import app_views
 from models import storage
 
@@ -8,7 +9,7 @@ from models import storage
 @app_views.route('/status', methods=['GET'], strict_slashes=False)
 def status():
     """creates a JSON response for status message"""
-    return jsonify({"status": "OK"})
+    return Response(dumps({"status": "OK"}), content_type='application/json')
 
 
 @app_views.route('/stats', methods=['GET'], strict_slashes=False)
