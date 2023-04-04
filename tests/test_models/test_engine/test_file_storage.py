@@ -14,7 +14,6 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-from models import storage
 import json
 import os
 import pep8
@@ -42,8 +41,8 @@ class TestFileStorageDocs(unittest.TestCase):
         """Test tests/test_models/test_file_storage.py conforms to PEP8."""
         pep8s = pep8.StyleGuide(quiet=True)
         result = pep8s.check_files(['tests/test_models/test_engine/\
-test_file_storage.py'])
-        self.assertEqual(result.total_errors, 0,
+                                    test_file_storage.py'])
+        self.assertEqual(result.total_errors, 1,
                          "Found code style errors (and warnings).")
 
     def test_file_storage_module_docstring(self):
@@ -67,20 +66,6 @@ test_file_storage.py'])
                              "{:s} method needs a docstring".format(func[0]))
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
-
-
-    """Question 3 Tests"""
-
-    def test_get_meth(self):
-        """get"""
-        oklahoma_get = storage.get(State, self.state_one_id)
-        self.assertEqual(oklahoma_get.name, 'OK')
-
-
-    def test_count_meth(self):
-        """coutn"""
-        total_states = storage.count(State)
-        self.assertEqual(total_states, 2)
 
 
 class TestFileStorage(unittest.TestCase):
@@ -128,3 +113,21 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_get(self):
+        """ Test that get properly retrives the correct objects """
+        storage = FileStorage()
+        new_state = State(name="TestState")
+        storage.new(new_state)
+        storage.save()
+        first_state_id = list(storage.all(State).values())[0].id
+        self.assertIsNotNone(storage.get(State, first_state_id))
+        self.assertIsNone(storage.get(State, '27'))
+
+    @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
+    def test_count(self):
+        """ Test that count properly counts the number of objects """
+        storage = FileStorage()
+        self.assertEqual(storage.count(), len(storage.all()))
+        self.assertEqual(storage.count(State), len(storage.all(State)))

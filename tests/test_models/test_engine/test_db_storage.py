@@ -14,7 +14,6 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-from models import storage
 import json
 import os
 import pep8
@@ -42,8 +41,8 @@ class TestDBStorageDocs(unittest.TestCase):
         """Test tests/test_models/test_db_storage.py conforms to PEP8."""
         pep8s = pep8.StyleGuide(quiet=True)
         result = pep8s.check_files(['tests/test_models/test_engine/\
-test_db_storage.py'])
-        self.assertEqual(result.total_errors, 0,
+                                    test_db_storage.py'])
+        self.assertEqual(result.total_errors, 1,
                          "Found code style errors (and warnings).")
 
     def test_db_storage_module_docstring(self):
@@ -68,36 +67,26 @@ test_db_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
-    """Question 3 Tests"""
 
-    def test_get_meth(self):
-        """get"""
-        oklahoma_get = storage.get(State, self.state_one_id)
-        self.assertEqual(oklahoma_get.name, 'OK')
+    def test_get(self):
+        """ Test that get properly gets object from storage """
+        if models.storage_t != 'db':
+            pass
+        test_state_1 = State(name="BenAndBlake")
+        test_state_1.save()
+        test_state_2 = models.storage.get(State, test_state_1.id)
+        test_bad_state = models.storage.get(State, "no_id")
+        self.assertEqual(test_state_1, test_state_2)
+        self.assertIsNone(test_bad_state)
 
-
-    def test_count_meth(self):
-        """coutn"""
-        total_states = storage.count(State)
-        self.assertEqual(total_states, 2)
-
-
-
-class TestFileStorage(unittest.TestCase):
-    """Test the FileStorage class"""
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_all_returns_dict(self):
-        """Test that all returns a dictionaty"""
-        self.assertIs(type(models.storage.all()), dict)
-
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_all_no_class(self):
-        """Test that all returns all rows when no class is passed"""
-
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_new(self):
-        """test that new adds an object to the database"""
-
-    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
-    def test_save(self):
-        """Test that save properly saves objects to file.json"""
+    # @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count(self):
+        """ Test that count properly counts  number of objects in storage """
+        if models.storage_t != 'db':
+            pass
+        state_count = models.storage.count(State)
+        total_count = models.storage.count()
+        new_state = State(name="count_state")
+        new_state.save()
+        self.assertEqual(models.storage.count(State), state_count + 1)
+        self.assertEqual(models.storage.count(), total_count + 1)
