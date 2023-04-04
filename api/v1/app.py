@@ -13,17 +13,12 @@ app.register_blueprint(app_views)
 
 
 @app.teardown_appcontext
-def teardown_appcontext(exception):
+def teardown_db(exception):
     """method closes storage session"""
     storage.close()
 
 
-def start_flask():
-    """ start flask """
+if __name__ == "__main__":
     app.run(host=env('HBNB_API_HOST'),
             port=env('HBNB_API_PORT'),
             threaded=True)
-
-
-if __name__ == "__main__":
-    start_flask()
