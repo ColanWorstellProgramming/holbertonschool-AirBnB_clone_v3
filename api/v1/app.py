@@ -18,7 +18,12 @@ def teardown_appcontext(exception):
     storage.close()
 
 
-if __name__ == "__main__":
+def start_flask():
+    """ start flask """
     app.run(host=env('HBNB_API_HOST'),
             port=env('HBNB_API_PORT'),
             threaded=True)
+
+
+if __name__ == "__main__":
+    start_flask()
