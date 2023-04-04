@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 """ creates a JSON response """
-from json import dumps
-from flask import jsonify, Response
 from api.v1.views import app_views
+from flask import jsonify
 from models import storage
 
 
