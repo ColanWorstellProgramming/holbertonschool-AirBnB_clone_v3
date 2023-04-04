@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ Creating an instance of Flask """
-from flask import Flask, make_response
+from flask import Flask, jsonify, make_response
 from flask_cors import CORS
 from models import storage
 from api.v1.views import app_views
@@ -15,9 +15,7 @@ app.register_blueprint(app_views)
 @app.errorhandler(404)
 def handle_404(exception):
     """handles 404 scenario (page not found)"""
-    code = exception.__str__().split()[0]
-    message = {"error": "Not found"}
-    return make_response(message, code)
+    return make_response(jsonify({"error": "Not found"}), 404)
 
 
 @app.teardown_appcontext
