@@ -67,7 +67,6 @@ class TestDBStorageDocs(unittest.TestCase):
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
-
     def test_get(self):
         """ Test that get properly gets object from storage """
         if models.storage_t != 'db':
@@ -78,7 +77,6 @@ class TestDBStorageDocs(unittest.TestCase):
         test_bad_state = models.storage.get(State, "no_id")
         self.assertEqual(test_state_1, test_state_2)
         self.assertIsNone(test_bad_state)
-
 
     def test_count(self):
         """ Test that count properly counts  number of objects in storage """
