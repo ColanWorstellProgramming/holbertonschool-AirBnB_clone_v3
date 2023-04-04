@@ -19,7 +19,7 @@ def handle_404(exception):
 
 
 @app.teardown_appcontext
-def teardown_appcontext(exception):
+def teardown(exception):
     """method closes storage session"""
     storage.close()
 
